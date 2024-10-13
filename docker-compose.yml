@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    ports:
+      - "8080:80"
+    # volumes:
+    #   - ./web:/var/www/html
+    #   - ./dic:/var/www/html/dic
+    #   - ./config-dev:/var/www/html/config
+    #   - ./logs:/var/www/html/logs
+    #   - ./src:/var/www/html/src      
+    #   #- ./Makefile:/var/www/html/Makefile
+    #   #- ./composer.json:/var/www/html/composer.json
+    #   - ./bootstrap.php:/var/www/html/bootstrap.php
+    #   - ./autoloader.php:/var/www/html/autoloader.php
+    #   - ./error_handler.php:/var/www/html/error_handler.php
+    depends_on:
+      - db
+    networks:
+      - mynetwork
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: samplepass
+      MYSQL_DATABASE: sample
+      MYSQL_USER: sampleuser
+      MYSQL_PASSWORD: samplepass
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
